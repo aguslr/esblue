@@ -23,6 +23,17 @@ Features
   + [`autofirma-1.8.2-1.noarch_FEDORA.rpm`][5]
   + [`configuradorfnmt-4.0.2-0.x86_64.rpm`][6]
 
+Tags
+----
+
+There are three flavors for this image:
+
+- `latest`: Adds packages on top of [BlueVanilla][2].
+
+- `fusion`: Adds packages on top of [BlueFusion][3].
+
+- `rock`: Adds packages on top of [BlueRock][4].
+
 Verification
 ------------
 
