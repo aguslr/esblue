@@ -133,6 +133,7 @@ jobs:
             latest=false
           tags: |
             type=raw,value=latest-fusion
+            type=raw,value=fusion
 
       - name: Build Image
         id: build_image
