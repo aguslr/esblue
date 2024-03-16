@@ -2,7 +2,7 @@ name: Build Secure image
 
 on:
   schedule:
-    - cron: '50 20 * * *'  # 8:50pm everyday
+    - cron: '40 23 * * *'  # 11:40pm everyday
   pull_request:
     branches:
       - main
