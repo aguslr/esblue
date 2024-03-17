@@ -10,4 +10,5 @@ RUN rpm-ostree install java-17-openjdk && cd /tmp && \
     echo '86a3b4673ce78663ab996aa542a2bd93f9e666f04e16f4763cccfba6274beb04  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status && \
     unzip AutoFirma_Linux_Fedora.zip && \
     rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.x86_64.rpm && \
+    rpm-ostree cleanup -m && \
     ostree container commit
