@@ -3,7 +3,7 @@ ARG FEDORA_MAJOR_VERSION=39
 
 FROM ghcr.io/aguslr/blue${FEDORA_BASE}:${FEDORA_MAJOR_VERSION}
 
-RUN rpm-ostree install java-1.8.0-openjdk && cd /tmp && \
+RUN rpm-ostree install java-17-openjdk && cd /tmp && \
     curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.2-0.x86_64.rpm' -O && \
     echo '34395c27b7713bf358da3f3f472b9e0a19c94bef9bb796c6582bffb61bfab3e2  configuradorfnmt-4.0.2-0.x86_64.rpm' | sha256sum --check --status && \
     curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/currentversion/AutoFirma_Linux_Fedora.zip' -O && \
