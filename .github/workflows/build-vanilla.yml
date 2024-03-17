@@ -109,6 +109,7 @@ jobs:
             latest=false
           tags: |
             type=raw,value=${{ matrix.major_version }}
+            type=raw,value=${{ matrix.major_version }}-vanilla
 
       - name: Extract Docker stable tag
         if: |
@@ -123,6 +124,8 @@ jobs:
           tags: |
             type=schedule,pattern={{date 'YYYYMMDD'}}
             type=raw,value=stable
+            type=schedule,pattern={{date 'YYYYMMDD'}},suffix=-vanilla
+            type=raw,value=stable-vanilla
 
       - name: Extract Docker latest tag
         if: |
@@ -136,6 +139,7 @@ jobs:
             latest=false
           tags: |
             type=raw,value=latest
+            type=raw,value=latest-vanilla
 
       - name: Build Image
         id: build_image
