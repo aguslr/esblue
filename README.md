@@ -21,7 +21,7 @@ Features
 - Add the following packages to the image:
   + `java-17-openjdk`
   + [`autofirma-1.8.2-1.noarch_FEDORA.rpm`][5]
-  + [`configuradorfnmt-4.0.2-0.x86_64.rpm`][6]
+  + [`configuradorfnmt-4.0.5-0.x86_64.rpm`][6]
 
 Tags
 ----
