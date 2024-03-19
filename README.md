@@ -13,7 +13,13 @@ packages to use digital certificates with the Spanish government.
 Usage
 -----
 
-    sudo rpm-ostree rebase --experimental ostree-unverified-registry:ghcr.io/aguslr/esblue:latest
+1. Rebase to an unsigned image to get proper signing keys:
+
+       rpm-ostree rebase ostree-unverified-registry:ghcr.io/aguslr/esblue:latest && systemctl reboot
+
+2. Rebase to a signed image to finish the installation:
+
+       rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/esblue:latest && systemctl reboot
 
 Features
 --------
