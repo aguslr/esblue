@@ -21,6 +21,15 @@ Usage
 
        rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/esblue:latest && systemctl reboot
 
+Alternatively, an [ISO file for offline installation][8] can be generated with
+the following command:
+
+    sudo podman run --rm --privileged --volume .:/isogenerator/output \
+        --security-opt label=disable --pull=newer \
+        -e IMAGE_REPO="ghcr.iso/aguslr" -e IMAGE_NAME="esblue" \
+        -e IMAGE_TAG="latest" -e VARIANT="Silverblue" \
+        ghcr.io/ublue-os/isogenerator:39
+
 Features
 --------
 
@@ -57,3 +66,4 @@ following command:
 [5]: https://firmaelectronica.gob.es/Home/Descargas.html
 [6]: https://www.sede.fnmt.gob.es/descargas/descarga-software/instalacion-software-generacion-de-claves
 [7]: https://docs.sigstore.dev/cosign/overview/
+[8]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
