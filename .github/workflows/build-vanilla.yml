@@ -23,7 +23,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_VARIANT: vanilla
+  IMAGE_NAME: ${{ github.event.repository.name }}vanilla
   REGISTRY_URL: ghcr.io
   REGISTRY_USERNAME: ${{ github.repository_owner }}
   REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -110,7 +111,6 @@ jobs:
             latest=false
           tags: |
             type=raw,value=${{ matrix.major_version }}
-            type=raw,value=${{ matrix.major_version }}-vanilla
 
       - name: Extract Docker stable tag
         if: |
@@ -125,8 +125,6 @@ jobs:
           tags: |
             type=schedule,pattern={{date 'YYYYMMDD'}}
             type=raw,value=stable
-            type=schedule,pattern={{date 'YYYYMMDD'}},suffix=-vanilla
-            type=raw,value=stable-vanilla
 
       - name: Extract Docker latest tag
         if: |
@@ -140,7 +138,6 @@ jobs:
             latest=false
           tags: |
             type=raw,value=latest
-            type=raw,value=latest-vanilla
 
       - name: Build Image
         id: build_image
@@ -157,7 +154,7 @@ jobs:
             ${{ steps.meta_latest.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            FEDORA_BASE=vanilla
+            FEDORA_BASE=${{ env.IMAGE_VARIANT }}
             FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
           oci: false
 

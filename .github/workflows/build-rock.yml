@@ -23,7 +23,8 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_VARIANT: rock
+  IMAGE_NAME: ${{ github.event.repository.name }}rock
   REGISTRY_URL: ghcr.io
   REGISTRY_USERNAME: ${{ github.repository_owner }}
   REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -84,7 +85,7 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=ref,suffix=-${{ matrix.major_version }}-rock,event=pr
+            type=ref,suffix=-${{ matrix.major_version }},event=pr
 
       - name: Extract Docker date tag
         if: github.event_name == 'schedule'
@@ -96,7 +97,7 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=schedule,prefix=${{ matrix.major_version }}-,suffix=-rock,pattern={{date 'YYYYMMDD'}}
+            type=schedule,prefix=${{ matrix.major_version }}-,pattern={{date 'YYYYMMDD'}}
 
       - name: Extract Docker major version tag
         if: |
@@ -109,7 +110,7 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=raw,value=${{ matrix.major_version }}-rock
+            type=raw,value=${{ matrix.major_version }}
 
       - name: Extract Docker stable tag
         if: |
@@ -122,8 +123,8 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=schedule,pattern={{date 'YYYYMMDD'}},suffix=-rock
-            type=raw,value=stable-rock
+            type=schedule,pattern={{date 'YYYYMMDD'}}
+            type=raw,value=stable
 
       - name: Extract Docker latest tag
         if: |
@@ -136,8 +137,7 @@ jobs:
           flavor: |
             latest=false
           tags: |
-            type=raw,value=latest-rock
-            type=raw,value=rock
+            type=raw,value=latest
 
       - name: Build Image
         id: build_image
@@ -154,7 +154,7 @@ jobs:
             ${{ steps.meta_latest.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            FEDORA_BASE=rock
+            FEDORA_BASE=${{ env.IMAGE_VARIANT }}
             FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
           oci: false
 
