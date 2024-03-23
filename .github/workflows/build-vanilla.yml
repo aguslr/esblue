@@ -6,20 +6,15 @@ on:
   pull_request:
     branches:
       - main
-    paths-ignore:
-      - '.gitignore'
-      - 'README*'
-      - '*.md'
-      - '*.png'
-      - '*.txt'
+    paths:
+      - .github/workflows/*.yml
+      - Containerfile*
   push:
     branches:
       - main
-    paths-ignore:
-      - 'README*'
-      - '*.md'
-      - '*.png'
-      - '*.txt'
+    paths:
+      - .github/workflows/*.yml
+      - Containerfile*
   workflow_dispatch:
 
 env:
