@@ -149,7 +149,7 @@ jobs:
             ${{ steps.meta_latest.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            FEDORA_BASE=${{ env.IMAGE_VARIANT }}
+            FEDORA_VARIANT=${{ env.IMAGE_VARIANT }}
             FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
           oci: false
 

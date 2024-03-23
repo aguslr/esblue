@@ -1,7 +1,8 @@
-ARG FEDORA_BASE=vanilla
+ARG FEDORA_BASE=ghcr.io/aguslr/blue
+ARG FEDORA_VARIANT=vanilla
 ARG FEDORA_MAJOR_VERSION=39
 
-FROM ghcr.io/aguslr/blue${FEDORA_BASE}:${FEDORA_MAJOR_VERSION}
+FROM ${FEDORA_BASE}${FEDORA_VARIANT}:${FEDORA_MAJOR_VERSION}
 
 RUN cd /tmp && \
     curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.5-0.x86_64.rpm' -O && \
