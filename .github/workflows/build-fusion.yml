@@ -19,7 +19,7 @@ on:
 
 env:
   IMAGE_VARIANT: fusion
-  IMAGE_NAME: ${{ github.event.repository.name }}fusion
+  IMAGE_NAME: ${{ github.event.repository.name }}
   REGISTRY_URL: ghcr.io
   REGISTRY_USERNAME: ${{ github.repository_owner }}
   REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
@@ -63,7 +63,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -76,7 +76,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -88,7 +88,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -101,7 +101,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -114,7 +114,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -128,7 +128,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
           flavor: |
             latest=false
           tags: |
@@ -166,7 +166,7 @@ jobs:
 
       - name: Sign container image
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}@${TAGS}
         env:
           TAGS: ${{ steps.push.outputs.digest }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
