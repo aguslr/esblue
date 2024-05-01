@@ -15,6 +15,6 @@ RUN cd /tmp && \
         ln -s "${bin}" /etc/alternatives/ && \
         ln -s /etc/alternatives/"$(basename "${bin}")" /usr/bin/; \
     done && \
-    rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.x86_64.rpm && \
+    rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.x86_64.rpm ; \
     rpm-ostree cleanup -m && \
     ostree container commit
