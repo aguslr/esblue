@@ -5,24 +5,26 @@
 [![Fusion](https://github.com/aguslr/esblue/actions/workflows/build-fusion.yml/badge.svg)](https://github.com/aguslr/esblue/actions/workflows/build-fusion.yml)
 [![Rock](https://github.com/aguslr/esblue/actions/workflows/build-rock.yml/badge.svg)](https://github.com/aguslr/esblue/actions/workflows/build-rock.yml)
 
-A custom image based on [BlueVanilla][2]/[BlueFusion][3]/[BlueRock][4] with
-packages to use digital certificates with the Spanish government.
+Una imagen personalizada basada en
+[BlueVanilla][2]/[BlueFusion][3]/[BlueRock][4] con los paquetes necesarios para
+usar los certificados digitales del Gobierno de España.
 
-![Screenshot](screenshot.png "Screenshot")
+![Captura](screenshot.png "Captura")
 
-Usage
------
+Uso
+---
 
-1. Rebase to an unsigned image to get proper signing keys:
+1. Actualiza tu Fedora Silverblue a la imagen sin firmar para obtener las claves
+   de firma necesarias:
 
        rpm-ostree rebase ostree-unverified-registry:ghcr.io/aguslr/esbluerock:latest && systemctl reboot
 
-2. Rebase to a signed image to finish the installation:
+2. Actualiza de nuevo a la image firmada para acabar la instalación:
 
        rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/esbluerock:latest && systemctl reboot
 
-Alternatively, an [ISO file for offline installation][8] can be generated with
-the following command:
+Otra opción es generar una [imagen ISO para una instalación *offline*][8] con el
+siguiente comando:
 
     sudo podman run --rm --privileged \
         --volume .:/build-container-installer/build \
@@ -33,31 +35,31 @@ the following command:
         IMAGE_TAG="latest" \
         VARIANT="Silverblue"
 
-Features
---------
+Características
+---------------
 
-- Add the following packages to the image:
+- Añade los siguientes paquetes a Silverblue:
   + `java-17-openjdk`
   + [`autofirma-1.8.2-1.noarch_FEDORA.rpm`][5]
   + [`configuradorfnmt-4.0.5-0.x86_64.rpm`][6]
 
-Tags
-----
+Etiquetas
+---------
 
-There are three flavors for this image:
+Existen 3 variantes para esta image:
 
-- `esbluevanilla`: Adds packages on top of [BlueVanilla][2].
+- `esbluevanilla`: Añade los paquetes a [BlueVanilla][2].
 
-- `esbluefusion`: Adds packages on top of [BlueFusion][3].
+- `esbluefusion`: Añade los paquetes a [BlueFusion][3].
 
-- `esbluerock`: Adds packages on top of [BlueRock][4].
+- `esbluerock`: Añade los paquetes a [BlueRock][4].
 
-Verification
+Verificación
 ------------
 
-These images are signed with Sisgstore's [Cosign][7]. You can verify the
-signature by downloading the `cosign.pub` key from this repo and running the
-following command:
+Estas imágenes están firmadas con [Cosign][7] de Sisgstore. Puedes verificar la
+firma descargando el archivo clave `cosign.pub` de este repositorio y ejecutando
+el siguiente comando:
 
     cosign verify --key cosign.pub ghcr.io/aguslr/esbluerock
 
