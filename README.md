@@ -41,7 +41,7 @@ Características
 - Añade los siguientes paquetes a Silverblue:
   + `java-17-openjdk`
   + [`autofirma-1.8.2-1.noarch_FEDORA.rpm`][5]
-  + [`configuradorfnmt-4.0.5-0.x86_64.rpm`][6]
+  + [`configuradorfnmt-4.0.6-0.x86_64.rpm`][6]
 
 Etiquetas
 ---------
