@@ -14,7 +14,7 @@ RUN cd /tmp && \
     printf '#!/usr/bin/env sh\njava -classpath /usr/lib64/configuradorfnmt/configuradorfnmt.jar:bcpkix-fips.jar:bc-fips.jar es.gob.fnmt.cert.certrequest.CertRequest "$@"\n' > src/usr/bin/configuradorfnmt ; \
     rpm -qpi configuradorfnmt-*.x86_64.rpm > rpm.spec ; \
     sed -i -e '/^Architecture/d' -e '/^Install Date/d' -e '/^Size/d' -e '/^Signature/d' -e '/^Build /d' -e '/^Description/,+1d' rpm.spec ; \
-    printf 'BuildArch   : noarch\nBuildRoot   : %s/src\n\n%%description\n%s\n\n%%files\n\n' "${PWD}" 'Utilidad FNMT para la solicitud e instalación de certificados desde la página web de FNMT-RCM.' >> rpm.spec ; \
+    printf 'BuildArch   : noarch\nBuildRoot   : %s/src\n\n%%description\n%s\n\n%%files\n' "${PWD}" 'Utilidad FNMT para la solicitud e instalación de certificados desde la página web de FNMT-RCM.' >> rpm.spec ; \
     find "${PWD}/src" -type f -printf '/%P\n' >> rpm.spec ; \
     rpmbuild --define "_topdir ${PWD}/rpmbuild" --buildroot="${PWD}/src" -bb rpm.spec
 
