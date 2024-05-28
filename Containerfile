@@ -5,7 +5,7 @@ ARG FEDORA_MAJOR_VERSION=40
 FROM quay.io/fedora/fedora:${FEDORA_MAJOR_VERSION} AS builder
 
 WORKDIR /tmp
-RUN <<-'EOT' bash
+RUN <<-'EOT' sh
 	set -u
 
 	dnf install -y rpm-build cpio --setopt=install_weak_deps=False && \
@@ -32,7 +32,7 @@ FROM ${FEDORA_BASE}${FEDORA_VARIANT}:${FEDORA_MAJOR_VERSION}
 COPY --from=builder /tmp/rpmbuild/RPMS/noarch/configuradorfnmt-*.noarch.rpm /tmp
 
 WORKDIR /tmp
-RUN <<-'EOT' bash
+RUN <<-'EOT' sh
 	set -eu
 
 	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/currentversion/AutoFirma_Linux_Fedora.zip' -O
