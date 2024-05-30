@@ -8,7 +8,7 @@ WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -u
 
-	dnf install -y rpm-build cpio --setopt=install_weak_deps=False && \
+	dnf install -y rpm-build cpio --setopt=install_weak_deps=False
 
 	curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.6-0.x86_64.rpm' -O
 	echo 'a2c564ddc1f5e87b1c47afc196a7ef1d6b4844e59fc8b15cd828250dc9d43f03  configuradorfnmt-4.0.6-0.x86_64.rpm' | sha256sum --check --status
