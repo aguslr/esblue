@@ -36,7 +36,7 @@ RUN <<-'EOT' sh
 	set -eu
 
 	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/currentversion/AutoFirma_Linux_Fedora.zip' -O
-	echo '86a3b4673ce78663ab996aa542a2bd93f9e666f04e16f4763cccfba6274beb04  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
+	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
 	unzip AutoFirma_Linux_Fedora.zip
 
 	rpm-ostree install java-17-openjdk
