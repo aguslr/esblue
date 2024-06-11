@@ -35,7 +35,7 @@ WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -eu
 
-	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/currentversion/AutoFirma_Linux_Fedora.zip' -O
+	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
 	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
 	unzip AutoFirma_Linux_Fedora.zip
 
