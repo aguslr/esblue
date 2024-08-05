@@ -1,0 +1,146 @@
+ARG FEDORA_BASE=ghcr.io/aguslr/blue
+ARG FEDORA_MAJOR_VERSION=40
+
+FROM quay.io/fedora/fedora:${FEDORA_MAJOR_VERSION} AS builder
+
+WORKDIR /tmp
+RUN <<-'EOT' sh
+	set -u
+
+	touch /.dockerenv
+
+	# Instal Homebrew
+	case "$(rpm -E %{_arch})" in
+		x86_64)
+			dnf install -y git --setopt=install_weak_deps=False
+			curl -fLs \
+				https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash -s
+			/home/linuxbrew/.linuxbrew/bin/brew update
+			;;
+		*)
+			mkdir /home/linuxbrew
+			;;
+	esac
+
+	# Install Nix
+	dnf install -y xz --setopt=install_weak_deps=False
+	useradd nix && mkdir -m 0755 /nix && chown nix /nix
+	sudo -u nix -- bash -c \
+		'curl -fLs https://nixos.org/nix/install | sh -s -- --no-daemon --yes'
+	cp -pr \
+		/home/nix/.local/state/nix/profiles/profile-1-link \
+		/nix/var/nix/profiles/default
+
+	# AutoFirma and ConfiguradorFNMT
+	dnf install -y rpm-build cpio --setopt=install_weak_deps=False
+	curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.6-0.x86_64.rpm' -O
+	echo 'a2c564ddc1f5e87b1c47afc196a7ef1d6b4844e59fc8b15cd828250dc9d43f03  configuradorfnmt-4.0.6-0.x86_64.rpm' | sha256sum --check --status
+	rpm2cpio configuradorfnmt-*.x86_64.rpm | cpio -dium -D src
+	rm -rf src/usr/lib64/configuradorfnmt/jre
+	sed -i 's|^Exec=.*$|Exec=java -classpath /usr/lib64/configuradorfnmt/configuradorfnmt.jar:bcpkix-fips.jar:bc-fips.jar es.gob.fnmt.cert.certrequest.CertRequest %u|' src/usr/share/applications/configuradorfnmt.desktop
+	printf '#!/usr/bin/env sh\njava -classpath /usr/lib64/configuradorfnmt/configuradorfnmt.jar:bcpkix-fips.jar:bc-fips.jar es.gob.fnmt.cert.certrequest.CertRequest "$@"\n' > src/usr/bin/configuradorfnmt
+	rpm -qpi configuradorfnmt-*.x86_64.rpm > rpm.spec
+	sed -i -e '/^Architecture/d' -e '/^Install Date/d' -e '/^Size/d' -e '/^Signature/d' -e '/^Build /d' -e '/^Description/,+1d' rpm.spec
+	printf 'BuildArch   : noarch\nBuildRoot   : %s/src\n\n%%description\n%s\n\n%%files\n' "${PWD}" 'Utilidad FNMT para la solicitud e instalación de certificados desde la página web de FNMT-RCM.' >> rpm.spec
+	find "${PWD}/src" -type f -printf '/%P\n' >> rpm.spec
+	rpmbuild --define "_topdir ${PWD}/rpmbuild" --buildroot="${PWD}/src" -bb rpm.spec
+EOT
+
+FROM quay.io/fedora/fedora-silverblue:${FEDORA_MAJOR_VERSION}
+
+COPY --from=builder --chown=1000:1000 /home/linuxbrew /usr/share/homebrew
+COPY --from=builder --chown=1000:1000 /nix /usr/share/nix
+COPY --from=builder /tmp/rpmbuild/RPMS/noarch/configuradorfnmt-*.noarch.rpm /tmp
+COPY rootfs/ /
+
+WORKDIR /tmp
+RUN <<-'EOT' sh
+	set -eu
+
+	# From BlueVanilla
+	systemctl enable dconf-update.service
+	systemctl enable flatpak-add-flathub-repo.service
+	systemctl enable flatpak-replace-fedora-apps.service
+	systemctl enable flatpak-cleanup.timer
+	systemctl enable rpm-ostreed-automatic.timer
+
+	bg_file=$(find /usr/share/backgrounds/gnome/ -name 'adwaita-*.*' -print -quit) && \
+		sed -i 's|\.ext|.'"${bg_file##*.}"'|' /etc/dconf/db/local.d/01-background
+
+	case "$(rpm -E %fedora)" in
+		40)
+			rpm-ostree override remove \
+				gnome-classic-session \
+				gnome-classic-session-xsession
+			;;
+		*)
+			rpm-ostree override remove \
+				gnome-classic-session
+			;;
+	esac
+
+	rpm-ostree install gcc gnome-backgrounds-extras gnome-tweaks
+	rpm-ostree override remove \
+		gnome-shell-extension-apps-menu \
+		gnome-shell-extension-launch-new-instance \
+		gnome-shell-extension-places-menu \
+		gnome-shell-extension-window-list \
+		gnome-shell-extension-background-logo
+
+	# From BlueFusion
+	systemctl enable nix.mount
+	systemctl enable var-home-linuxbrew.mount
+
+	rpm-ostree install make
+	rpm-ostree override remove toolbox --install distrobox
+
+	rpm-ostree install \
+		https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm \
+		https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+	rpm-ostree install rpmfusion-free-release rpmfusion-nonfree-release \
+		--uninstall rpmfusion-free-release \
+		--uninstall rpmfusion-nonfree-release
+
+	rpm-ostree override remove \
+		ffmpeg-free \
+		libavcodec-free \
+		libavdevice-free \
+		libavfilter-free \
+		libavformat-free \
+		libavutil-free \
+		libpostproc-free \
+		libswresample-free \
+		libswscale-free \
+		--install=ffmpeg \
+		--install=gstreamer1-plugin-libav \
+		--install=gstreamer1-plugins-bad-free-extras \
+		--install=gstreamer1-plugins-bad-freeworld \
+		--install=gstreamer1-plugins-ugly \
+		--install=gstreamer1-vaapi
+
+	rpm-ostree override remove \
+		mesa-va-drivers \
+		--install=mesa-va-drivers-freeworld \
+		--install=mesa-vdpau-drivers-freeworld
+
+	if [ "$(rpm -E %{_arch})" = 'x86_64' ]; then
+		rpm-ostree install steam-devices
+		rpm-ostree install intel-media-driver libva-intel-driver
+	fi
+	rpm-ostree install libva-nvidia-driver
+
+	# From ESBlue
+	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
+	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
+	unzip AutoFirma_Linux_Fedora.zip
+
+	rpm-ostree install java-17-openjdk
+	rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.noarch.rpm
+
+	for bin in /usr/lib/jvm/java-17-openjdk*/bin/*; do
+		ln -s "${bin}" /etc/alternatives/
+		ln -s /etc/alternatives/"$(basename "${bin}")" /usr/bin/
+	done
+
+	rpm-ostree cleanup -m && ostree container commit
+EOT

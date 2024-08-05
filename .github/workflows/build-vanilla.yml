@@ -7,18 +7,17 @@ on:
     branches:
       - main
     paths:
-      - .github/workflows/*.yml
-      - Containerfile*
+      - .github/workflows/build-vanilla.yml
+      - Containerfile.vanilla
   push:
     branches:
       - main
     paths:
-      - .github/workflows/*.yml
-      - Containerfile*
+      - .github/workflows/build-vanilla.yml
+      - Containerfile.vanilla
   workflow_dispatch:
 
 env:
-  IMAGE_VARIANT: vanilla
   IMAGE_NAME: ${{ github.event.repository.name }}
   REGISTRY_URL: ghcr.io
   REGISTRY_USERNAME: ${{ github.repository_owner }}
@@ -60,7 +59,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}vanilla
           flavor: |
             latest=false
           tags: |
@@ -84,9 +83,8 @@ jobs:
           ACTIONS_RUNTIME_TOKEN: ''
         with:
           file: |
-            ./Containerfile
+            ./Containerfile.vanilla
           build-args: |
-            FEDORA_VARIANT=${{ env.IMAGE_VARIANT }}
             FEDORA_MAJOR_VERSION=${{ matrix.major_version }}
           platforms: linux/amd64,linux/arm64
           provenance: false
@@ -99,7 +97,7 @@ jobs:
 
       - name: Sign container image
         run: |
-          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}${{ env.IMAGE_VARIANT }}@${TAGS}
+          cosign sign -y --key env://COSIGN_PRIVATE_KEY ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}vanilla@${TAGS}
         env:
           TAGS: ${{ steps.build-and-push.outputs.digest }}
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGN_KEY }}
