@@ -17,11 +17,11 @@ Uso
 1. Actualiza tu Fedora Silverblue a la imagen sin firmar para obtener las claves
    de firma necesarias:
 
-       rpm-ostree rebase ostree-unverified-registry:ghcr.io/aguslr/esbluerock:latest && systemctl reboot
+       rpm-ostree rebase -r ostree-unverified-registry:ghcr.io/aguslr/esbluerock:stable
 
 2. Actualiza de nuevo a la image firmada para acabar la instalación:
 
-       rpm-ostree rebase ostree-image-signed:docker://ghcr.io/aguslr/esbluerock:latest && systemctl reboot
+       rpm-ostree rebase -r ostree-image-signed:docker://ghcr.io/aguslr/esbluerock:stable
 
 Otra opción es generar una [imagen ISO para una instalación *offline*][8] con el
 siguiente comando:
