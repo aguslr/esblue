@@ -9,7 +9,7 @@ Una imagen personalizada basada en
 [BlueVanilla][2]/[BlueFusion][3]/[BlueRock][4] con los paquetes necesarios para
 usar los certificados digitales del Gobierno de España.
 
-![Captura](screenshot.png "Captura")
+![Captura](.github/screenshot.png "Captura")
 
 Uso
 ---
