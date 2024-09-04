@@ -10,6 +10,12 @@ RUN <<-'EOT' sh
 
 	dnf install -y rpm-build cpio --setopt=install_weak_deps=False
 
+	# Download AutoFirma
+	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
+	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
+	unzip AutoFirma_Linux_Fedora.zip
+
+	# Download ConfiguradorFNMT
 	curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.6-0.x86_64.rpm' -O
 	echo 'a2c564ddc1f5e87b1c47afc196a7ef1d6b4844e59fc8b15cd828250dc9d43f03  configuradorfnmt-4.0.6-0.x86_64.rpm' | sha256sum --check --status
 
@@ -29,17 +35,16 @@ EOT
 
 FROM ${FEDORA_BASE}${FEDORA_VARIANT}:${FEDORA_MAJOR_VERSION}
 
+COPY --from=builder /tmp/*.rpm /tmp
 COPY --from=builder /tmp/rpmbuild/RPMS/noarch/configuradorfnmt-*.noarch.rpm /tmp
 
 WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -eu
 
-	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
-	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
-	unzip AutoFirma_Linux_Fedora.zip
-
 	rpm-ostree install java-17-openjdk
+
+	# Install utils
 	rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.noarch.rpm
 
 	for bin in /usr/lib/jvm/java-17-openjdk*/bin/*; do
