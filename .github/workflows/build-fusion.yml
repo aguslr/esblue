@@ -2,7 +2,7 @@ name: Build RPMFusion image
 
 on:
   schedule:
-    - cron: '30 23 * * *'  # 11:30pm everyday
+    - cron: '30 0 * * *'  # 12:30pm everyday
   pull_request:
     branches:
       - main
