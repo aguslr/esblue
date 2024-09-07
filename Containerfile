@@ -2,7 +2,7 @@ ARG FEDORA_BASE=ghcr.io/aguslr/blue
 ARG FEDORA_VARIANT=vanilla
 ARG FEDORA_MAJOR_VERSION=40
 
-FROM quay.io/fedora/fedora:${FEDORA_MAJOR_VERSION} AS builder
+FROM quay.io/fedora/fedora:latest AS builder
 
 WORKDIR /tmp
 RUN <<-'EOT' sh
