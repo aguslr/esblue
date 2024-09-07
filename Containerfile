@@ -31,12 +31,13 @@ RUN <<-'EOT' sh
 	find "${PWD}/src" -type f -printf '/%P\n' >> rpm.spec
 
 	rpmbuild --define "_topdir ${PWD}/rpmbuild" --buildroot="${PWD}/src" -bb rpm.spec
+	rm -f configuradorfnmt-*.x86_64.rpm
 EOT
 
 FROM ${FEDORA_BASE}${FEDORA_VARIANT}:${FEDORA_MAJOR_VERSION}
 
 COPY --from=builder /tmp/*.rpm /tmp
-COPY --from=builder /tmp/rpmbuild/RPMS/noarch/configuradorfnmt-*.noarch.rpm /tmp
+COPY --from=builder /tmp/rpmbuild/RPMS/noarch/*.rpm /tmp
 
 WORKDIR /tmp
 RUN <<-'EOT' sh
@@ -45,7 +46,7 @@ RUN <<-'EOT' sh
 	rpm-ostree install java-17-openjdk
 
 	# Install utils
-	rpm-ostree install autofirma-*.noarch_FEDORA.rpm configuradorfnmt-*.noarch.rpm
+	rpm-ostree install *.rpm
 
 	for bin in /usr/lib/jvm/java-17-openjdk*/bin/*; do
 		ln -s "${bin}" /etc/alternatives/
