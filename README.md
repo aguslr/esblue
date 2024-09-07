@@ -42,6 +42,7 @@ Características
   + `java-17-openjdk`
   + [`autofirma-1.8.3-1.noarch_FEDORA.rpm`][5]
   + [`configuradorfnmt-4.0.6-0.x86_64.rpm`][6]
+  + [`DNIeRemoteSetup-1.0-5.x86_64.rpm`][9]
 
 Etiquetas
 ---------
@@ -72,3 +73,4 @@ el siguiente comando:
 [6]: https://www.sede.fnmt.gob.es/descargas/descarga-software/instalacion-software-generacion-de-claves
 [7]: https://docs.sigstore.dev/cosign/overview/
 [8]: https://blue-build.org/learn/universal-blue/#fresh-install-from-an-iso
+[9]: https://www.dnielectronico.es/PortalDNIe/PRF1_Cons02.action?pag=REF_1015&id_menu=66

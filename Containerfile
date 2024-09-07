@@ -8,12 +8,21 @@ WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -u
 
-	dnf install -y rpm-build cpio --setopt=install_weak_deps=False
+	dnf install -y rpm-build cpio alien --setopt=install_weak_deps=False
 
 	# Download AutoFirma
 	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
 	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
 	unzip AutoFirma_Linux_Fedora.zip
+
+	# Download DNIeRemote
+	case "$(rpm -E %{_arch})" in
+		x86_64)
+			curl -fLs 'https://www.dnielectronico.es/descargas/Apps/DNIeRemote_1.0-5_amd64.zip' -O
+			echo '8cb25f1f2b210bc73904da6a8c861415258de27fd86d4ea7035794f954afa6b5  DNIeRemote_1.0-5_amd64.zip' | sha256sum --check --status
+			unzip DNIeRemote_1.0-5_amd64.zip && alien --keep-version --to-rpm DNIeRemoteSetup_1.0-5_amd64.deb
+			;;
+	esac
 
 	# Download ConfiguradorFNMT
 	curl -fLs 'https://descargas.cert.fnmt.es/Linux/configuradorfnmt-4.0.6-0.x86_64.rpm' -O
