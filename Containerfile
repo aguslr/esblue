@@ -43,7 +43,7 @@ WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -eu
 
-	rpm-ostree install java-17-openjdk
+	rpm-ostree install java
 
 	# Install utils
 	rpm-ostree install *.rpm
