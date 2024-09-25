@@ -48,10 +48,12 @@ RUN <<-'EOT' sh
 	# Install utils
 	rpm-ostree install *.rpm
 
-	for bin in /usr/lib/jvm/java-17-openjdk*/bin/*; do
-		ln -s "${bin}" /etc/alternatives/
-		ln -s /etc/alternatives/"$(basename "${bin}")" /usr/bin/
-	done
+	if [ "$(rpm -E %{fedora})" != '41' ]; then
+		for bin in /usr/lib/jvm/java-*-openjdk*/bin/*; do
+			ln -s "${bin}" /etc/alternatives/
+			ln -s /etc/alternatives/"$(basename "${bin}")" /usr/bin/
+		done
+	fi
 
 	rpm-ostree cleanup -m && ostree container commit
 EOT
