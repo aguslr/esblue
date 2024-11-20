@@ -12,7 +12,7 @@ RUN <<-'EOT' sh
 
 	# Download AutoFirma
 	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
-	echo '8fcc7f7d3101ae313ac739bd8c640631cff5717d981f165b471a72e0e52b8a74  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
+	echo 'ddd3957a06eb750ced8ff449d84d658897dc6dbc54825ba06d362bb0118fd04a  AutoFirma_Linux_Fedora.zip' | sha256sum --check --status
 	unzip AutoFirma_Linux_Fedora.zip
 
 	# Download ConfiguradorFNMT
