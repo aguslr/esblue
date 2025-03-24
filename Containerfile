@@ -8,7 +8,7 @@ WORKDIR /tmp
 RUN <<-'EOT' sh
 	set -eu
 
-	rpm-ostree install java
+	rpm-ostree install java-11-openjdk
 
 	# Download AutoFirma
 	curl -fLs 'https://estaticos.redsara.es/comunes/autofirma/1/8/3/AutoFirma_Linux_Fedora.zip' -O
